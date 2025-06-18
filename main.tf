@@ -82,6 +82,9 @@ module "oke" {
   ## Control Plane Kubernetes Version
   k8s_version = var.k8s_version
 
+  ## Write kubeconfig to a file
+  write_kubeconfig = var.write_kubeconfig
+
   ## Create Dynamic group and Policies for Autoscaler and OCI Metrics and Logging
   # create_dynamic_group_for_nodes_in_compartment = var.create_dynamic_group_for_nodes_in_compartment
   # create_compartment_policies                   = var.create_compartment_policies

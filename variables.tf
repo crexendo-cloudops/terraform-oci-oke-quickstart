@@ -351,3 +351,11 @@ variable "create_tenancy_policies" {
   default     = false
   description = "Creates policies that need to reside on the tenancy. e.g.: Policies to support OCI Metrics datasource on Grafana"
 }
+
+################################################################################
+# Variables: other variables
+################################################################################
+variable "write_kubeconfig" {
+  default     = true
+  description = "Write the kubeconfig to a file"
+}

@@ -11,6 +11,10 @@ variable "region" {}
 variable "vcn_id" { description = "VCN OCID to deploy OKE Cluster" }
 variable "k8s_endpoint_subnet_id" { description = "Kubernetes Endpoint Subnet OCID to deploy OKE Cluster" }
 variable "lb_subnet_id" { description = "Load Balancer Subnet OCID to deploy OKE Cluster" }
+variable "write_kubeconfig" {
+  default     = true
+  description = "Write the kubeconfig to a file"
+}
 variable "cluster_workers_visibility" {
   default     = "Private"
   description = "The Kubernetes worker nodes that are created will be hosted in public or private subnet(s)"
