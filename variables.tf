@@ -66,6 +66,10 @@ variable "ipv6private_cidr_blocks" {
   default     = []
   description = "The list of one or more ULA or Private IPv6 CIDR blocks for the Virtual Cloud Network (VCN)."
 }
+variable "nat_gateway_public_ip_id" {
+  default     = null
+  description = "The OCID of the public IP address to be used for the NAT Gateway"
+}
 ## Subnets
 variable "create_subnets" {
   default     = true

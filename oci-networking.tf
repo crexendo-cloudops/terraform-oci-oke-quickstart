@@ -97,7 +97,7 @@ module "gateways" {
   # NAT Gateway
   create_nat_gateway       = local.create_subnets
   nat_gateway_display_name = "NAT Gateway (${local.deploy_id})"
-  nat_gateway_public_ip_id = null
+  nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
 
   # Service Gateway
   create_service_gateway       = local.create_subnets
