@@ -52,7 +52,7 @@ resource "oci_containerengine_cluster" "oke_cluster" {
   }
 
   lifecycle {
-    ignore_changes = [freeform_tags, defined_tags, kubernetes_version, id]
+    ignore_changes = [defined_tags["Oracle-Tags.CreatedBy"], defined_tags["Oracle-Tags.CreatedOn"], kubernetes_version, id]
   }
 
   count = var.create_new_oke_cluster ? 1 : 0

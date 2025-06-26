@@ -82,7 +82,9 @@ resource "oci_containerengine_node_pool" "oke_node_pool" {
 
   lifecycle {
     ignore_changes = [
-      node_config_details.0.size
+      node_config_details.0.size,
+      defined_tags["Oracle-Tags.CreatedBy"],
+      defined_tags["Oracle-Tags.CreatedOn"]
     ]
   }
 
