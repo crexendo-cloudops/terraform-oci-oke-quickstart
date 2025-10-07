@@ -103,6 +103,18 @@ variable "node_pool_cloud_init_parts" {
   default     = []
   description = "Node Pool nodes Cloud init parts"
 }
+variable "node_pool_node_pool_cycling_details_is_node_cycling_enabled" {
+  default     = true
+  description = "Enable Node Pool Cycling"
+}
+variable "node_pool_node_pool_cycling_details_maximum_surge" {
+  default     = 1
+  description = "The maximum number of nodes that can be down during maintenance operations. The default value is 1."
+}
+variable "node_pool_node_pool_cycling_details_maximum_unavailable" {
+  default     = 1
+  description = "The maximum number of nodes that can be unavailable after a scale up operation. The default value is 1."
+}
 variable "public_ssh_key" {
   default     = ""
   description = "In order to access your private nodes with a public SSH key you will need to set up a bastion host (a.k.a. jump box). If using public nodes, bastion is not needed. Left blank to not import keys."

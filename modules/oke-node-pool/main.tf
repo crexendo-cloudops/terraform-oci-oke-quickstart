@@ -1,6 +1,6 @@
 # Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
-# 
+#
 
 # File Version: 0.7.1
 
@@ -60,11 +60,11 @@ resource "oci_containerengine_node_pool" "oke_node_pool" {
     user_data = anytrue([var.node_pool_oke_init_params != "", var.node_pool_cloud_init_parts != []]) ? data.cloudinit_config.nodes.rendered : null
   }
 
-  # node_pool_cycling_details {
-  #       is_node_cycling_enabled = var.node_pool_node_pool_cycling_details_is_node_cycling_enabled
-  #       maximum_surge = var.node_pool_node_pool_cycling_details_maximum_surge
-  #       maximum_unavailable = var.node_pool_node_pool_cycling_details_maximum_unavailable
-  # }
+  node_pool_cycling_details {
+        is_node_cycling_enabled = var.node_pool_node_pool_cycling_details_is_node_cycling_enabled
+        maximum_surge = var.node_pool_node_pool_cycling_details_maximum_surge
+        maximum_unavailable = var.node_pool_node_pool_cycling_details_maximum_unavailable
+  }
 
   initial_node_labels {
     key   = "name"
