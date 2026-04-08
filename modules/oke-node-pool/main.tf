@@ -98,12 +98,13 @@ locals {
   # Gets the latest Kubernetes version supported by the node pool
   node_pool_k8s_latest_version = reverse(sort(data.oci_containerengine_node_pool_option.node_pool.kubernetes_versions))[0]
   node_k8s_version             = (var.node_k8s_version == "Latest") ? local.node_pool_k8s_latest_version : var.node_k8s_version
+  node_k8s_version_short       = replace(local.node_k8s_version, "v", "")
 
   # Get ADs for the shape to be used on the node pool
   node_pool_ads = (var.node_pool_shape_specific_ad > 0) ? data.oci_identity_availability_domain.specfic : data.oci_identity_availability_domains.ADs.availability_domains
 
   # Detect ARM architecture from shape name (A1 and A2 shapes are aarch64)
-  node_arch_is_arm = can(regex("\\.(A1|A2|A4)\\.", var.node_pool_shape))
+  node_arch_is_arm = can(regex("\\.(A[0-9])\\.", var.node_pool_shape))
 
   # Convert OS name to the format used in OKE source names (e.g. "Oracle Linux" -> "Oracle-Linux")
   os_name_normalized = replace(var.image_operating_system, " ", "-")
@@ -114,10 +115,9 @@ locals {
     for s in data.oci_containerengine_node_pool_option.node_pool.sources :
     s if(
       s.source_type == "IMAGE" &&
-      strcontains(s.source_name, "OKE") &&
-      startswith(s.source_name, "${local.os_name_normalized}-${var.image_operating_system_version}") &&
-      (local.node_arch_is_arm ? strcontains(s.source_name, "aarch64") : !strcontains(s.source_name, "aarch64")) &&
-      endswith(s.source_name, "-${local.node_k8s_version}-[0-9]+")
+      local.node_arch_is_arm ?
+      can(regex("^${local.os_name_normalized}-${var.image_operating_system_version}.[0-9]*-aarch64-[0-9.-]*OKE-${local.node_k8s_version_short}-[0-9]*$", s.source_name)) :
+      can(regex("^${local.os_name_normalized}-${var.image_operating_system_version}.[0-9]*-[0-9.-]*OKE-${local.node_k8s_version_short}-[0-9]*$", s.source_name))
     )
   ]
 
