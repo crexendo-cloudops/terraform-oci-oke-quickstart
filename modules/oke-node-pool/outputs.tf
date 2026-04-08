@@ -18,7 +18,7 @@ output "node_k8s_version" {
   value = local.node_k8s_version
 }
 output "node_pool_image_name" {
-  value = lookup(data.oci_core_images.node_pool_images.images[0], "display_name")
+  value = local.oke_node_pool_image.source_name
 }
 output "node_pool_autoscaler_enabled" {
   value = var.node_pool_autoscaler_enabled

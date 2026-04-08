@@ -47,7 +47,7 @@ resource "oci_containerengine_node_pool" "oke_node_pool" {
 
   node_source_details {
     source_type             = "IMAGE"
-    image_id                = lookup(data.oci_core_images.node_pool_images.images[0], "id")
+    image_id                = local.oke_node_pool_image.image_id
     boot_volume_size_in_gbs = var.node_pool_boot_volume_size_in_gbs
   }
 
@@ -101,4 +101,27 @@ locals {
 
   # Get ADs for the shape to be used on the node pool
   node_pool_ads = (var.node_pool_shape_specific_ad > 0) ? data.oci_identity_availability_domain.specfic : data.oci_identity_availability_domains.ADs.availability_domains
+
+  # Detect ARM architecture from shape name (A1 and A2 shapes are aarch64)
+  node_arch_is_arm = can(regex("\\.(A1|A2|A4)\\.", var.node_pool_shape))
+
+  # Convert OS name to the format used in OKE source names (e.g. "Oracle Linux" -> "Oracle-Linux")
+  os_name_normalized = replace(var.image_operating_system, " ", "-")
+
+  # Filter OKE images from node pool options by OS, OS version, architecture, and OKE image marker
+  # EXAMPLE SOURCE NAME: Oracle-Linux-8.10-aarch64-2026.01.29-0-OKE-1.35.0-1367
+  oke_images = [
+    for s in data.oci_containerengine_node_pool_option.node_pool.sources :
+    s if(
+      s.source_type == "IMAGE" &&
+      strcontains(s.source_name, "OKE") &&
+      startswith(s.source_name, "${local.os_name_normalized}-${var.image_operating_system_version}") &&
+      (local.node_arch_is_arm ? strcontains(s.source_name, "aarch64") : !strcontains(s.source_name, "aarch64")) &&
+      endswith(s.source_name, "-${local.node_k8s_version}-[0-9]+")
+    )
+  ]
+
+  # Pick the latest image — source names are date-stamped so lexicographic descending sort is chronological
+  oke_images_by_name  = reverse(sort([for s in local.oke_images : s.source_name]))
+  oke_node_pool_image = [for s in local.oke_images : s if s.source_name == local.oke_images_by_name[0]][0]
 }
