@@ -1,6 +1,6 @@
 # Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
-# 
+#
 
 ################################################################################
 # OCI Provider Variables
@@ -106,6 +106,16 @@ variable "existent_oke_fss_mount_targets_subnet_ocid" {
 variable "extra_subnets" {
   default     = []
   description = "Extra subnets to be created."
+}
+variable "extra_private_route_rules" {
+  description = "Extra private route rules"
+  type        = list(any)
+  default     = []
+}
+variable "extra_public_route_rules" {
+  description = "Extra public route rules"
+  type        = list(any)
+  default     = []
 }
 variable "extra_route_tables" {
   default     = []

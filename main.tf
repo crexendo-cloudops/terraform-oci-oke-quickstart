@@ -1,6 +1,6 @@
 # Copyright (c) 2022, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
-# 
+#
 
 # File Version: 0.8.0
 
@@ -271,11 +271,13 @@ locals {
 
 # OKE Route Tables definitions
 locals {
+  extra_private_route_rules = var.extra_private_route_rules != null ? var.extra_private_route_rules : []
+  extra_public_route_rules = var.extra_public_route_rules != null ? var.extra_public_route_rules : []
   route_tables_oke = [
     {
       route_table_name = "private"
       display_name     = "OKE Private Route Table (${local.deploy_id})"
-      route_rules = [
+      route_rules = concat([
         {
           description       = "Traffic to the internet"
           destination       = lookup(local.network_cidrs, "ALL-CIDR")
@@ -287,19 +289,18 @@ locals {
           destination       = lookup(data.oci_core_services.all_services_network.services[0], "cidr_block")
           destination_type  = "SERVICE_CIDR_BLOCK"
           network_entity_id = module.gateways.service_gateway_id
-      }]
-
+      }], local.extra_private_route_rules)
     },
     {
       route_table_name = "public"
       display_name     = "OKE Public Route Table (${local.deploy_id})"
-      route_rules = [
+      route_rules = concat([
         {
           description       = "Traffic to/from internet"
           destination       = lookup(local.network_cidrs, "ALL-CIDR")
           destination_type  = "CIDR_BLOCK"
           network_entity_id = module.gateways.internet_gateway_id
-      }]
+      }], local.extra_public_route_rules)
   }]
 }
 
