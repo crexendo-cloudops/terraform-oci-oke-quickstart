@@ -1,6 +1,6 @@
 # Copyright (c) 2022-2024, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl.
-# 
+#
 
 # File Version: 0.10.1
 
@@ -24,7 +24,7 @@
 # Module: Virtual Cloud Network (VCN)
 ################################################################################
 module "vcn" {
-  source = "github.com/crexendo-cloudops/terraform-oci-networking//modules/vcn?ref=ignore_tags"
+  source = "github.com/crexendo-cloudops/terraform-oci-networking//modules/vcn?ref=ignore_tag_changes"
 
   # Oracle Cloud Infrastructure Tenancy and Compartment OCID
   compartment_ocid = local.vcn_compartment_ocid
@@ -47,7 +47,7 @@ module "vcn" {
 ################################################################################
 module "subnets" {
   for_each = { for map in local.subnets : map.subnet_name => map }
-  source   = "github.com/crexendo-cloudops/terraform-oci-networking//modules/subnet?ref=ignore_tags"
+  source   = "github.com/crexendo-cloudops/terraform-oci-networking//modules/subnet?ref=ignore_tag_changes"
 
   # Oracle Cloud Infrastructure Tenancy and Compartment OCID
   compartment_ocid = local.vcn_compartment_ocid
@@ -80,7 +80,7 @@ module "subnets" {
 # Module: Gateways
 ################################################################################
 module "gateways" {
-  source = "github.com/crexendo-cloudops/terraform-oci-networking//modules/gateways?ref=ignore_tags"
+  source = "github.com/crexendo-cloudops/terraform-oci-networking//modules/gateways?ref=ignore_tag_changes"
 
   # Oracle Cloud Infrastructure Tenancy and Compartment OCID
   compartment_ocid = local.vcn_compartment_ocid
@@ -114,7 +114,7 @@ module "gateways" {
 ################################################################################
 module "route_tables" {
   for_each = { for map in local.route_tables : map.route_table_name => map }
-  source   = "github.com/crexendo-cloudops/terraform-oci-networking//modules/route_table?ref=ignore_tags"
+  source   = "github.com/crexendo-cloudops/terraform-oci-networking//modules/route_table?ref=ignore_tag_changes"
 
   # Oracle Cloud Infrastructure Tenancy and Compartment OCID
   compartment_ocid = local.vcn_compartment_ocid
@@ -135,7 +135,7 @@ module "route_tables" {
 ################################################################################
 module "security_lists" {
   for_each = { for map in local.security_lists : map.security_list_name => map }
-  source   = "github.com/crexendo-cloudops/terraform-oci-networking//modules/security_list?ref=ignore_tags"
+  source   = "github.com/crexendo-cloudops/terraform-oci-networking//modules/security_list?ref=ignore_tag_changes"
 
   # Oracle Cloud Infrastructure Tenancy and Compartment OCID
   compartment_ocid = local.vcn_compartment_ocid
