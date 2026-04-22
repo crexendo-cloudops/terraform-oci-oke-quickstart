@@ -1,6 +1,10 @@
 name: tfsec-pr-commenter
 on:
   pull_request:
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
 jobs:
   tfsec:
     name: tfsec PR commenter
