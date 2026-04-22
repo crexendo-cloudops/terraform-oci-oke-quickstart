@@ -88,6 +88,11 @@ resource "oci_containerengine_node_pool" "oke_node_pool" {
     ]
   }
 
+  timeouts {
+    create = "90m"
+    update = "90m"
+    delete = "90m"
+  }
   count = var.create_new_node_pool ? 1 : 0
 }
 
