@@ -108,7 +108,7 @@ variable "node_pool_node_pool_cycling_details_is_node_cycling_enabled" {
   description = "Enable Node Pool Cycling"
 }
 variable "node_pool_node_pool_cycling_details_maximum_surge" {
-  default     = 1
+  default     = "100%"
   description = "The maximum number of nodes that can be down during maintenance operations. The default value is 1."
 }
 variable "node_pool_node_pool_cycling_details_maximum_unavailable" {
