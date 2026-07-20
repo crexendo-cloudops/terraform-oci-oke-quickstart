@@ -132,6 +132,7 @@ module "oke_node_pools" {
   image_operating_system_version            = try(each.value.image_operating_system_version, "8")
   extra_initial_node_labels                 = try(each.value.extra_initial_node_labels, {})
   cni_type                                  = try(each.value.cni_type, "FLANNEL_OVERLAY")
+  node_pool_max_pods_per_node               = try(each.value.node_pool_max_pods_per_node, 31)
 
   # OKE Network Details
   # nodes_subnet_id                       = local.create_subnets ? module.subnets["oke_nodes_subnet"].subnet_id : var.existent_oke_nodes_subnet_ocid
@@ -164,6 +165,7 @@ locals {
       image_operating_system_version            = var.image_operating_system_version_1
       extra_initial_node_labels                 = var.extra_initial_node_labels_1
       cni_type                                  = local.cni_type
+      node_pool_max_pods_per_node               = var.node_pool_max_pods_per_node_1
     },
   ]
 }

@@ -283,6 +283,11 @@ variable "node_pool_cni_type_1" {
     error_message = "Sorry, but OKE currently only supports FLANNEL_OVERLAY or OCI_VCN_IP_NATIVE CNI types."
   }
 }
+variable "node_pool_max_pods_per_node_1" {
+  default     = 31
+  description = "Max pods per node with OCI_VCN_IP_NATIVE CNI. Effective limit is min(110, (VNICs - 1) * 31); VNIC count scales with OCPUs on Flex shapes. Existing nodes must be cycled to pick up a change."
+  type        = number
+}
 
 #### ocpus and memory are only used if flex shape is selected
 variable "node_pool_instance_shape_1" {
