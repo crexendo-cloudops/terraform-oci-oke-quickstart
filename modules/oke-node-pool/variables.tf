@@ -69,6 +69,16 @@ variable "cni_type" {
     error_message = "Sorry, but OKE currently only supports FLANNEL_OVERLAY or OCI_VCN_IP_NATIVE CNI types."
   }
 }
+variable "node_pool_max_pods_per_node" {
+  default     = 31
+  description = "Max pods per node with OCI_VCN_IP_NATIVE CNI. Effective limit is min(110, (VNICs - 1) * 31); VNIC count scales with OCPUs on Flex shapes. Existing nodes must be cycled to pick up a change."
+  type        = number
+
+  validation {
+    condition     = var.node_pool_max_pods_per_node >= 1 && var.node_pool_max_pods_per_node <= 110
+    error_message = "node_pool_max_pods_per_node must be between 1 and 110."
+  }
+}
 variable "existent_oke_nodepool_id_for_autoscaler" {
   default     = ""
   description = "Nodepool Id of the existent OKE to use with Cluster Autoscaler"
