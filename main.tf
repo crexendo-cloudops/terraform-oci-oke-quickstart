@@ -274,7 +274,7 @@ locals {
 # OKE Route Tables definitions
 locals {
   extra_private_route_rules = var.extra_private_route_rules != null ? var.extra_private_route_rules : []
-  extra_public_route_rules = var.extra_public_route_rules != null ? var.extra_public_route_rules : []
+  extra_public_route_rules  = var.extra_public_route_rules != null ? var.extra_public_route_rules : []
   route_tables_oke = [
     {
       route_table_name = "private"
@@ -459,6 +459,15 @@ locals {
           tcp_options  = { max = 32767, min = 30000, source_port_range = null }
           udp_options  = { max = -1, min = -1, source_port_range = null }
           icmp_options = null
+          }, {
+          description  = "Load Balancer health checks to kube-proxy"
+          source       = lookup(local.network_cidrs, "LB-REGIONAL-SUBNET-CIDR")
+          source_type  = "CIDR_BLOCK"
+          protocol     = local.security_list_ports.tcp_protocol_number
+          stateless    = false
+          tcp_options  = { max = local.security_list_ports.kube_proxy_health_port_number, min = local.security_list_ports.kube_proxy_health_port_number, source_port_range = null }
+          udp_options  = { max = -1, min = -1, source_port_range = null }
+          icmp_options = null
       }]
     },
     {
@@ -474,6 +483,15 @@ locals {
           tcp_options      = { max = 32767, min = 30000, source_port_range = null }
           udp_options      = { max = -1, min = -1, source_port_range = null }
           icmp_options     = null
+          }, {
+          description      = "Load Balancer health checks to kube-proxy on worker nodes"
+          destination      = lookup(local.network_cidrs, "NODES-REGIONAL-SUBNET-CIDR")
+          destination_type = "CIDR_BLOCK"
+          protocol         = local.security_list_ports.tcp_protocol_number
+          stateless        = false
+          tcp_options      = { max = local.security_list_ports.kube_proxy_health_port_number, min = local.security_list_ports.kube_proxy_health_port_number, source_port_range = null }
+          udp_options      = { max = -1, min = -1, source_port_range = null }
+          icmp_options     = null
       }]
       ingress_security_rules = [
         {
@@ -483,6 +501,15 @@ locals {
           protocol     = local.security_list_ports.tcp_protocol_number
           stateless    = false
           tcp_options  = { max = local.security_list_ports.https_port_number, min = local.security_list_ports.https_port_number, source_port_range = null }
+          udp_options  = { max = -1, min = -1, source_port_range = null }
+          icmp_options = null
+          }, {
+          description  = "Allow inbound HTTP traffic to Load Balancer"
+          source       = lookup(local.network_cidrs, "ALL-CIDR")
+          source_type  = "CIDR_BLOCK"
+          protocol     = local.security_list_ports.tcp_protocol_number
+          stateless    = false
+          tcp_options  = { max = local.security_list_ports.http_port_number, min = local.security_list_ports.http_port_number, source_port_range = null }
           udp_options  = { max = -1, min = -1, source_port_range = null }
           icmp_options = null
       }]
@@ -699,6 +726,7 @@ locals {
     k8s_api_endpoint_port_number            = 6443
     k8s_api_endpoint_to_worker_port_number  = 10250
     k8s_worker_to_control_plane_port_number = 12250
+    kube_proxy_health_port_number           = 10256
     ssh_port_number                         = 22
     tcp_protocol_number                     = "6"
     icmp_protocol_number                    = "1"
